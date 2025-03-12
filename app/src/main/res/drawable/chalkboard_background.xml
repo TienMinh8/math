@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#1B5E20" /> <!-- Dark green chalkboard color -->
+    <gradient
+        android:angle="45"
+        android:endColor="#0D3311"
+        android:startColor="#1B5E20"
+        android:type="linear" />
+</shape> 
