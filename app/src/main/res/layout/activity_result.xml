@@ -1,62 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:background="#1A0B2E"
-    android:fitsSystemWindows="true">
+    android:background="#1A0B2E">
 
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:background="@drawable/right"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="5dp"/>
+    <!-- Score Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Score"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="20dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerResult"
+            <TextView
+                android:id="@+id/scoreText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textSize="72sp"
+                android:textStyle="bold"
+                android:textColor="#4CAF50"/>
+
+            <TextView
+                android:id="@+id/correctAnswersText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correct Answers: 10/10"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+    <!-- Buttons Container -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/back"
-        android:layout_marginBottom="80dp"
-        android:layout_marginStart="10dp"
-        android:layout_alignParentBottom="true"/>
-
-    <RelativeLayout
-        android:id="@+id/bottom"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp">
 
-        <TextView
-            android:id="@+id/tvScore"
-            android:layout_width="wrap_content"
+        <!-- Play Again Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/playAgainButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Play Again"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:background="@drawable/play_again_button_background"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:padding="10dp"
-            android:text="Your Score: 0/10"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnRestart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:backgroundTint="@color/black"
-            android:padding="10dp"
-            android:text="Restart Quiz"
-            android:textColor="@android:color/white" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/homeButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:background="@drawable/home_button_background"
+                android:text="Home"
+                android:layout_marginEnd="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-    </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/detailButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/home_button_background"
+                android:text="Detail"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
 
-</RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

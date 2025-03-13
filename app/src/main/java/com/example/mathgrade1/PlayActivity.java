@@ -1,6 +1,7 @@
 package com.example.mathgrade1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,11 +13,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +21,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlayActivity extends AppCompatActivity {
@@ -36,6 +31,8 @@ public class PlayActivity extends AppCompatActivity {
     private RadioButton buttonA, buttonB, buttonC, buttonD;
     private Button nextButton;
     private int score = 0;
+
+    private int totalScore = 0;
     private ImageView back;
 
     @Override
@@ -76,12 +73,12 @@ public class PlayActivity extends AppCompatActivity {
             is.close();
 
             // chuyển đổi mảng byte(buffer) thành chuỗi JSON
-        String json = new String(buffer, "UTF-8");
+            String json = new String(buffer, "UTF-8");
 
-            Log.d("JSON_DATA",json);
+            Log.d("JSON_DATA", json);
 
             JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i ++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object = jsonArray.getJSONObject(i);
                 Question question = new Question(
                         object.getString("question"),
@@ -100,48 +97,64 @@ public class PlayActivity extends AppCompatActivity {
         return questionList;
     }
 
+    private void saveUserAnswer(int currentQuestionIndex, String selectedAnswer) {
+        SharedPreferences sharedPreferences = getSharedPreferences("quiz_answers", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("answer_" + currentQuestionIndex, selectedAnswer);
+        editor.apply();
+    }
 
     private void nextQuestion() {
-        if (radioGroup.getCheckedRadioButtonId() == -1){
-            Toast.makeText(this,"Please select answer!", Toast.LENGTH_SHORT).show();
+        if (radioGroup.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this, "Please select answer!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         RadioButton selectedAnswer = findViewById(radioGroup.getCheckedRadioButtonId());
         String answerText = selectedAnswer.getText().toString().substring(3);
 
-        if (answerText.equals(questions.get(currentQuestionIndex).getCorrectAnswer())){
+        saveUserAnswer(currentQuestionIndex, answerText);
+
+        if (answerText.equals(questions.get(currentQuestionIndex).getCorrectAnswer())) {
             score++;
+            totalScore += 10;
         }
 
+        Question currentQuestion = questions.get(currentQuestionIndex);
+
         currentQuestionIndex++;
-        if (currentQuestionIndex < questions.size()){
+        if (currentQuestionIndex < questions.size()) {
             displayQuestion(currentQuestionIndex);
-        }else {
+        } else {
             Toast.makeText(this, "You have activated all the answers!", Toast.LENGTH_LONG).show();
             nextButton.setEnabled(false);
 
+            Bundle resultData = new Bundle();
+            resultData.putInt("score", score);
+            resultData.putInt("total", questions.size());
+            resultData.putInt("totalScore", totalScore);
+
             Intent intent = new Intent(this, ResultActivity.class);
-            intent.putExtra("score", score);
-            intent.putExtra("total", questions.size());
+            intent.putExtras(resultData);
             startActivity(intent);
             finish();
         }
     }
 
     private void displayQuestion(int index) {
-        if (index < questions.size()){
+        if (index < questions.size()) {
             Question currentQuestion = questions.get(index);
             questionText.setText(currentQuestion.getQuestion());
-            buttonA.setText("A. "+ currentQuestion.getA());
-            buttonB.setText("B. "+ currentQuestion.getB());
-            buttonC.setText("C. "+ currentQuestion.getC());
-            buttonD.setText("D. "+ currentQuestion.getD());
+            buttonA.setText("A. " + currentQuestion.getA());
+            buttonB.setText("B. " + currentQuestion.getB());
+            buttonC.setText("C. " + currentQuestion.getC());
+            buttonD.setText("D. " + currentQuestion.getD());
             radioGroup.clearCheck();
 
-            if (index == questions.size() - 1){
+            if (index == questions.size() - 1) {
                 nextButton.setText("Submit");
-            }else {
+            } else {
                 nextButton.setText("Next");
             }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,9 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class ResultActivity extends AppCompatActivity {
-    private TextView tvScore;
-    private Button btnRestart;
-    private ImageView back;
+    private TextView scoreText, correctAnswersText;
+    private Button playAgainButton, homeButton, detailButton;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -26,23 +24,38 @@ public class ResultActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_result);
 
-        tvScore = findViewById(R.id.tvScore);
-        btnRestart = findViewById(R.id.btnRestart);
-        back = findViewById(R.id.back);
+        scoreText = findViewById(R.id.scoreText);
+        correctAnswersText = findViewById(R.id.correctAnswersText);
+        playAgainButton = findViewById(R.id.playAgainButton);
+        homeButton = findViewById(R.id.homeButton);
+        detailButton = findViewById(R.id.detailButton);
 
-        back.setOnClickListener(v -> finish());
+        homeButton.setOnClickListener(v -> finish());
 
-        int score = getIntent().getIntExtra("score", 0);
-        int totalQuestions = getIntent().getIntExtra("total", 0);
-
-        tvScore.setText("Your Score: " + score + "/" + totalQuestions);
-
-        btnRestart.setOnClickListener(new View.OnClickListener() {
+        playAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ResultActivity.this, PlayActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        Bundle resultData = getIntent().getExtras();
+        if(resultData != null){
+            int score = resultData.getInt("score" , 0);
+            int totalQuestions = resultData.getInt("total" , 0);
+            int totalScore = resultData.getInt("totalScore" , 0);
+
+            correctAnswersText.setText("Correct Answers: " + score + "/" + totalQuestions);
+            scoreText.setText("" + totalScore);
+        }
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ResultActivity.this, DetailResultActivity.class);
+                intent.putExtras(resultData);
+                startActivity(intent);
             }
         });
     }
