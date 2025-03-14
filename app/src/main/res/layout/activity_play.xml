@@ -22,7 +22,7 @@
             android:layout_height="42dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/right"/>
+            android:background="@drawable/ic_back"/>
     </LinearLayout>
 
 

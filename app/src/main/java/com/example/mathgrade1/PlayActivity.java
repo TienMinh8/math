@@ -1,7 +1,6 @@
 package com.example.mathgrade1;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -14,6 +13,12 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mathgrade1.model.Answer;
+import com.example.mathgrade1.model.History;
+import com.example.mathgrade1.shareUtil.AnswerManager;
+import com.example.mathgrade1.shareUtil.MyApplication;
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayActivity extends AppCompatActivity {
+    private static final String TAG = "PlayActivity";
     private List<Question> questions;
     private int currentQuestionIndex = 0;
     private RadioGroup radioGroup;
@@ -31,9 +37,12 @@ public class PlayActivity extends AppCompatActivity {
     private RadioButton buttonA, buttonB, buttonC, buttonD;
     private Button nextButton;
     private int score = 0;
-
     private int totalScore = 0;
     private ImageView back;
+    private AnswerManager answerManager;
+    private List<Answer> answers;
+    private List<History> historyList;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +50,16 @@ public class PlayActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_play);
 
+        answerManager = MyApplication.getInstance().getAnswerManager();
+        answers = new ArrayList<>();
+        historyList = new ArrayList<>();
+
         initItem();
 
         questions = loadQuestionFromJson();
         nextButton.setOnClickListener(v -> nextQuestion());
         displayQuestion(currentQuestionIndex);
         back.setOnClickListener(v -> finish());
-
     }
 
     private void initItem() {
@@ -61,21 +73,17 @@ public class PlayActivity extends AppCompatActivity {
         back = findViewById(R.id.back);
     }
 
-    // đọc dữ liệu từ file json
     private List<Question> loadQuestionFromJson() {
         List<Question> questionList = new ArrayList<>();
         try {
-            // mở file question.json trong asstes
             InputStream is = getAssets().open("questions.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
 
-            // chuyển đổi mảng byte(buffer) thành chuỗi JSON
             String json = new String(buffer, "UTF-8");
-
-            Log.d("JSON_DATA", json);
+            Log.d(TAG, "Loaded JSON: " + json);
 
             JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -91,19 +99,19 @@ public class PlayActivity extends AppCompatActivity {
                 questionList.add(question);
             }
         } catch (IOException | JSONException e) {
-            Log.e("JSON_ERROR", "Error loading question: " + e.getMessage());
+            Log.e(TAG, "Error loading questions: " + e.getMessage());
             e.printStackTrace();
         }
         return questionList;
     }
 
-    private void saveUserAnswer(int currentQuestionIndex, String selectedAnswer) {
-        SharedPreferences sharedPreferences = getSharedPreferences("quiz_answers", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString("answer_" + currentQuestionIndex, selectedAnswer);
-        editor.apply();
+    private void saveAnswer(int questionNumber, String question, String userAnswer, String correctAnswer, boolean isCorrect) {
+        Answer answer = new Answer(questionNumber, question, userAnswer, correctAnswer, isCorrect);
+        answers.add(answer);
+        answerManager.saveAnswers(answers);
+        Log.d(TAG, "Saved answer: " + answer.getQuestion() + " = " + answer.getUserAnswer() + " - " + answer.isCorrect());
     }
+
 
     private void nextQuestion() {
         if (radioGroup.getCheckedRadioButtonId() == -1) {
@@ -113,27 +121,32 @@ public class PlayActivity extends AppCompatActivity {
 
         RadioButton selectedAnswer = findViewById(radioGroup.getCheckedRadioButtonId());
         String answerText = selectedAnswer.getText().toString().substring(3);
+        Question currentQuestion = questions.get(currentQuestionIndex);
+        String correctAnswer = currentQuestion.getCorrectAnswer();
+        boolean isCorrect = answerText.equals(correctAnswer);
 
-        saveUserAnswer(currentQuestionIndex, answerText);
+        // lưu đáp án
+        saveAnswer(currentQuestionIndex + 1, currentQuestion.getQuestion(), answerText, correctAnswer, isCorrect);
 
-        if (answerText.equals(questions.get(currentQuestionIndex).getCorrectAnswer())) {
+        if (isCorrect) {
             score++;
             totalScore += 10;
         }
-
-        Question currentQuestion = questions.get(currentQuestionIndex);
 
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.size()) {
             displayQuestion(currentQuestionIndex);
         } else {
-            Toast.makeText(this, "You have activated all the answers!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You have completed all questions!", Toast.LENGTH_LONG).show();
             nextButton.setEnabled(false);
 
             Bundle resultData = new Bundle();
             resultData.putInt("score", score);
             resultData.putInt("total", questions.size());
             resultData.putInt("totalScore", totalScore);
+
+            AnswerManager answerManagers = new AnswerManager(this);
+            answerManagers.saveHistory(score,totalScore, questions.size());
 
             Intent intent = new Intent(this, ResultActivity.class);
             intent.putExtras(resultData);
@@ -157,8 +170,6 @@ public class PlayActivity extends AppCompatActivity {
             } else {
                 nextButton.setText("Next");
             }
-
         }
     }
-
 }

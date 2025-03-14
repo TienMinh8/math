@@ -53,7 +53,7 @@ public class ResultActivity extends AppCompatActivity {
         detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ResultActivity.this, DetailResultActivity.class);
+                Intent intent = new Intent(ResultActivity.this, DetailedResultActivity.class);
                 intent.putExtras(resultData);
                 startActivity(intent);
             }
