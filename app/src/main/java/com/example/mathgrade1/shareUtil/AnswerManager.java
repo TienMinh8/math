@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class AnswerManager {
     private static final String KEY_ANSWERS = "user_answers";
     private static final String KEY_SCORE = "user_score";
     private static final String KEY_HISTORY = "history_answers";
+    private static final String KEY_TOP_SCORE = "top_scores";
     private SharedPreferences prefs;
     private Gson gson;
     private static final Type ANSWER_LIST_TYPE = new TypeToken<ArrayList<Answer>>() {
@@ -90,6 +92,19 @@ public class AnswerManager {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public List<Integer> getTopScores(){
+        List<History> histories = getHistoryAnswer();
+        List<Integer> topscore = new ArrayList<>();
+
+        for (History result : histories){
+            topscore.add(result.getScore());
+        }
+
+        Collections.sort(topscore, Collections.reverseOrder());
+
+        return topscore;
     }
 
     // Xóa tất cả dữ liệu

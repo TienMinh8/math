@@ -33,8 +33,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         History history = historyList.get(position);
-        holder.totalScore.setText(""+ history.getCorrectAnswers());
-        holder.numberOfAnswers.setText("Your Socre:" +history.getScore()+"/"+history.getTotalQuestion());
+        holder.totalScore.setText("Your Socre: "+ history.getCorrectAnswers());
+        holder.numberOfAnswers.setText("Number: " +history.getScore()+"/"+history.getTotalQuestion());
     }
 
     @Override
