@@ -21,6 +21,7 @@ public class AnswerManager {
     private static final String KEY_TOP_SCORE = "top_scores";
     private SharedPreferences prefs;
     private Gson gson;
+    private Context mContext;
     private static final Type ANSWER_LIST_TYPE = new TypeToken<ArrayList<Answer>>() {
     }.getType();
     private static final Type HISTORY_LIST_TYPE = new TypeToken<ArrayList<History>>() {
@@ -29,6 +30,7 @@ public class AnswerManager {
     public AnswerManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
+        this.mContext = mContext;
     }
 
     // Lưu danh sách đáp án
@@ -65,7 +67,7 @@ public class AnswerManager {
             if (histories == null) {
                 histories = new ArrayList<>();
             }
-            
+
             // Tạo lịch sử mới với điểm số và số câu trả lời đúng
             History newHistory = new History(score, correctAnswers, totalQuestion);
             histories.add(0,newHistory);
@@ -110,6 +112,20 @@ public class AnswerManager {
             return Collections.singletonList(topscore.get(0));
         }else {
             return new ArrayList<>();
+        }
+    }
+
+    public void clearLastHistory() {
+        List<History> historyList = getHistoryAnswer();
+        if (historyList != null && !historyList.isEmpty()) {
+            // Xóa lần chơi gần nhất (phần tử đầu tiên trong danh sách)
+            historyList.remove(0);
+
+            // Lưu lại danh sách đã cập nhật
+            SharedPreferences.Editor editor = prefs.edit();
+            String json = gson.toJson(historyList);
+            editor.putString(KEY_HISTORY, json);
+            editor.apply();
         }
     }
 

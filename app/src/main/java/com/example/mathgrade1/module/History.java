@@ -27,7 +27,11 @@ public class History {
         this.correctAnswers = correctAnswers;
     }
 
-    public int getTotalQuestion(){
+    public int getTotalQuestion() {
         return totalQuestion;
+    }
+
+    public void setTotalQuestion(int totalQuestion) {
+        this.totalQuestion = totalQuestion;
     }
 }

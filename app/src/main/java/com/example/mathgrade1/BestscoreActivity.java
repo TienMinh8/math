@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mathgrade1.adapter.HistoryAdapter;
+import com.example.mathgrade1.adapter.BestScoreAdapter;
 import com.example.mathgrade1.module.History;
 import com.example.mathgrade1.shareUtil.AnswerManager;
 
@@ -21,7 +21,7 @@ public class BestscoreActivity extends AppCompatActivity {
     private ImageView back;
     private TextView highestScoreText, correctAnswersText;
     private RecyclerView recentScoresRecyclerView;
-    private HistoryAdapter historyAdapter;
+    private BestScoreAdapter bestScoreAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +50,14 @@ public class BestscoreActivity extends AppCompatActivity {
 
         History bestScore = historyList.get(0);
         highestScoreText.setText(String.valueOf(bestScore.getCorrectAnswers()));
-        correctAnswersText.setText("Correct: " + bestScore.getScore() + "/" + bestScore.getTotalQuestion());
+        correctAnswersText.setText("Your Score: " + bestScore.getScore() + "/" + bestScore.getTotalQuestion());
 
-        List<History> otherScores = new ArrayList<>(historyList.subList(1, historyList.size()));
+        List<History> otherScores = new ArrayList<>();
+        if (historyList.size() > 1) {
+            otherScores = historyList.subList(1, historyList.size());
+        }
 
-        historyAdapter = new HistoryAdapter(otherScores);
-        recentScoresRecyclerView.setAdapter(historyAdapter);
+        bestScoreAdapter = new BestScoreAdapter(otherScores);
+        recentScoresRecyclerView.setAdapter(bestScoreAdapter);
     }
 }

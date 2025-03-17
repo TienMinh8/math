@@ -1,4 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-</selector>
+    <!-- Background shadow -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp"/>
+            <solid android:color="#7D752E"/> <!-- Màu nền bóng tối -->
+        </shape>
+    </item>
+
+    <!-- Button với gradient -->
+    <item android:top="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp"/>
+            <gradient
+                android:angle="00"
+                android:startColor="#B59C3A"
+                android:centerColor="#C58340"
+                android:endColor="#B5983A"
+                android:type="linear"/>
+            <stroke android:width="4dp" android:color="#B5983A"/> <!-- Viền xanh lá nhạt -->
+        </shape>
+    </item>
+
+    <!-- Hiệu ứng sáng bóng trên cùng -->
+    <item android:top="6dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp"/>
+            <gradient
+                android:angle="90"
+                android:startColor="#66FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+</layer-list>

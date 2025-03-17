@@ -59,17 +59,17 @@ public class DetailedResultActivity extends AppCompatActivity {
 
         Bundle resultData = getIntent().getExtras();
         if (resultData != null) {
-            int score = resultData.getInt("score", 0);
+            int correctAnswers = resultData.getInt("score", 0);
             int totalQuestions = resultData.getInt("total", 0);
 
-            tvScore.setText("Your Score: " + score + "/" + totalQuestions);
+            tvScore.setText("Your Score: " + correctAnswers + "/" + totalQuestions);
         }
 
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Clear all data
-                answerManager.clearAll();
+                answerManager.clearLastHistory();
                 Intent intent = new Intent(DetailedResultActivity.this, PlayActivity.class);
                 startActivity(intent);
                 finish();

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/history_backgroud"
-    tools:context=".BestscoreActivity">
+    tools:context=".BestscoreActivity"
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <TextView
@@ -104,9 +105,9 @@
         android:id="@+id/recentScoresTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="124dp"
         android:layout_marginTop="16dp"
         android:text="Recent Scores"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -117,7 +118,7 @@
         android:id="@+id/recentScoresRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:clipToPadding="false"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"

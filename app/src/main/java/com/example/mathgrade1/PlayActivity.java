@@ -26,7 +26,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity {
     private static final String TAG = "PlayActivity";
@@ -36,8 +38,8 @@ public class PlayActivity extends AppCompatActivity {
     private TextView questionText;
     private RadioButton buttonA, buttonB, buttonC, buttonD;
     private Button nextButton;
+    private int correctAnswers = 0;
     private int score = 0;
-    private int totalScore = 0;
     private ImageView back;
     private AnswerManager answerManager;
     private List<Answer> answers;
@@ -50,15 +52,22 @@ public class PlayActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_play);
 
+        // lấy AnswerManager từ Myapplication để dùng chung toàn bộ app
         answerManager = MyApplication.getInstance().getAnswerManager();
+
+        //Tạo danh sách rỗng để lưu câu trả lời của người chơi
         answers = new ArrayList<>();
+
+        //Tạo danh sách rỗng để lưu lịch sử các lần chơi trước
         historyList = new ArrayList<>();
 
         initItem();
 
         questions = loadQuestionFromJson();
-        nextButton.setOnClickListener(v -> nextQuestion());
+        //hiển thị câu hỏi dựa vào vị trí currentQuestionIndex ( vị trí câu hỏi hiện tại )
         displayQuestion(currentQuestionIndex);
+
+        nextButton.setOnClickListener(v -> nextQuestion());
         back.setOnClickListener(v -> finish());
     }
 
@@ -74,7 +83,8 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private List<Question> loadQuestionFromJson() {
-        List<Question> questionList = new ArrayList<>();
+        List<Question> allQuestions = new ArrayList<>();
+        List<Question> selectedQuestions = new ArrayList<>();
         try {
             InputStream is = getAssets().open("questions.json");
             int size = is.available();
@@ -96,13 +106,30 @@ public class PlayActivity extends AppCompatActivity {
                         object.getString("D"),
                         object.getString("result")
                 );
-                questionList.add(question);
+                allQuestions.add(question);
             }
+
+            // Chọn ngẫu nhiên 10 câu hỏi
+            Random random = new Random();
+            int maxQuestions = Math.min(10, allQuestions.size());
+            
+            // Tạo danh sách các chỉ số ngẫu nhiên
+            List<Integer> randomIndices = new ArrayList<>();
+            for (int i = 0; i < allQuestions.size(); i++) {
+                randomIndices.add(i);
+            }
+            Collections.shuffle(randomIndices);
+
+            // Lấy 10 câu hỏi đầu tiên sau khi đã xáo trộn
+            for (int i = 0; i < maxQuestions; i++) {
+                selectedQuestions.add(allQuestions.get(randomIndices.get(i)));
+            }
+
         } catch (IOException | JSONException e) {
             Log.e(TAG, "Error loading questions: " + e.getMessage());
             e.printStackTrace();
         }
-        return questionList;
+        return selectedQuestions;
     }
 
     private void saveAnswer(int questionNumber, String question, String userAnswer, String correctAnswer, boolean isCorrect) {
@@ -129,8 +156,8 @@ public class PlayActivity extends AppCompatActivity {
         saveAnswer(currentQuestionIndex + 1, currentQuestion.getQuestion(), answerText, correctAnswer, isCorrect);
 
         if (isCorrect) {
-            score++;
-            totalScore += 10;
+            correctAnswers++;
+            score += 10;
         }
 
         currentQuestionIndex++;
@@ -141,12 +168,12 @@ public class PlayActivity extends AppCompatActivity {
             nextButton.setEnabled(false);
 
             Bundle resultData = new Bundle();
-            resultData.putInt("score", score);
+            resultData.putInt("score", correctAnswers);
             resultData.putInt("total", questions.size());
-            resultData.putInt("totalScore", totalScore);
+            resultData.putInt("totalScore", score);
 
             AnswerManager answerManagers = new AnswerManager(this);
-            answerManagers.saveHistory(score,totalScore, questions.size());
+            answerManagers.saveHistory(correctAnswers, score, questions.size());
 
             Intent intent = new Intent(this, ResultActivity.class);
             intent.putExtras(resultData);

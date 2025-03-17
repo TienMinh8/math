@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button playButton;
+    private Button playButton,advanced;
     private ImageView bestscore, history;
 
     @Override
@@ -29,12 +29,18 @@ public class MainActivity extends AppCompatActivity {
         playButton = findViewById(R.id.playButton);
         bestscore = findViewById(R.id.bestscore);
         history = findViewById(R.id.history);
+        advanced = findViewById(R.id.advanced);
     }
 
     private void setupListener() {
         playButton.setOnClickListener(v -> play());
         bestscore.setOnClickListener(v -> best());
         history.setOnClickListener(v -> historys());
+        advanced.setOnClickListener(v -> playadvanced());
+    }
+
+    private void playadvanced() {
+        startActivity(new Intent(MainActivity.this, PlayActivity.class));
     }
 
     private void play() {

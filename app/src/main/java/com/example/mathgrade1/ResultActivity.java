@@ -30,7 +30,11 @@ public class ResultActivity extends AppCompatActivity {
         homeButton = findViewById(R.id.homeButton);
         detailButton = findViewById(R.id.detailButton);
 
-        homeButton.setOnClickListener(v -> finish());
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ResultActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         playAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,12 +47,12 @@ public class ResultActivity extends AppCompatActivity {
 
         Bundle resultData = getIntent().getExtras();
         if(resultData != null){
-            int score = resultData.getInt("score" , 0);
+            int correctAnswers = resultData.getInt("score" , 0);
             int totalQuestions = resultData.getInt("total" , 0);
-            int totalScore = resultData.getInt("totalScore" , 0);
+            int Score = resultData.getInt("totalScore" , 0);
 
-            correctAnswersText.setText("Correct Answers: " + score + "/" + totalQuestions);
-            scoreText.setText("" + totalScore);
+            correctAnswersText.setText("Correct Answers: " + correctAnswers + "/" + totalQuestions);
+            scoreText.setText("" + Score);
         }
         detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
