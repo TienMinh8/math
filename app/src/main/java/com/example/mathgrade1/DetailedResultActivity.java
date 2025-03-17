@@ -36,22 +36,21 @@ public class DetailedResultActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detailed_result);
 
-        // Initialize views
         tvScore = findViewById(R.id.tvScore);
         btnRestart = findViewById(R.id.btnRestart);
         back = findViewById(R.id.back);
         home = findViewById(R.id.home);
         recyclerView = findViewById(R.id.answersRecyclerView);
 
-        // Setup RecyclerView
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        // Get answers from AnswerManager
+        // Nhận câu trả lời từ AnswerManager
         AnswerManager answerManager = MyApplication.getInstance().getAnswerManager();
         List<Answer> answers = answerManager.getAnswers();
         Log.d(TAG, "Number of answers: " + answers.size());
         
-        // Create and set adapter
+        // tạo adapter
         adapter = new AnswerAdapter(answers);
         recyclerView.setAdapter(adapter);
 
@@ -68,7 +67,7 @@ public class DetailedResultActivity extends AppCompatActivity {
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Clear all data
+                // Clear data
                 answerManager.clearLastHistory();
                 Intent intent = new Intent(DetailedResultActivity.this, PlayActivity.class);
                 startActivity(intent);
