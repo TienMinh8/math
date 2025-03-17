@@ -1,4 +1,4 @@
-package com.example.mathgrade1.adappter;
+package com.example.mathgrade1.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         History history = historyList.get(position);
-        holder.totalScore.setText("Your Socre: "+ history.getCorrectAnswers());
+        holder.totalScore.setText("Your Score: "+ history.getCorrectAnswers());
         holder.numberOfAnswers.setText("Number: " +history.getScore()+"/"+history.getTotalQuestion());
     }
 
@@ -47,5 +47,4 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             numberOfAnswers = itemView.findViewById(R.id.numberOfAnswers);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.mathgrade1.model;
+package com.example.mathgrade1.module;
 
 public class History {
     private int score;
@@ -26,9 +26,8 @@ public class History {
     public void setCorrectAnswers(int correctAnswers) {
         this.correctAnswers = correctAnswers;
     }
+
     public int getTotalQuestion(){
         return totalQuestion;
     }
-
-
 }

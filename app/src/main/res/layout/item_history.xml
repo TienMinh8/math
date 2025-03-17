@@ -57,8 +57,6 @@
             android:text="See details"
             android:textStyle="bold" />
 
-
     </RelativeLayout>
-
 
 </RelativeLayout>

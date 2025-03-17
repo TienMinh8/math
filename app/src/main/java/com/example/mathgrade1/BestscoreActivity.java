@@ -6,16 +6,15 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mathgrade1.adappter.HistoryAdapter;
-import com.example.mathgrade1.model.History;
+import com.example.mathgrade1.adapter.HistoryAdapter;
+import com.example.mathgrade1.module.History;
 import com.example.mathgrade1.shareUtil.AnswerManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BestscoreActivity extends AppCompatActivity {
@@ -23,7 +22,6 @@ public class BestscoreActivity extends AppCompatActivity {
     private TextView highestScoreText, correctAnswersText;
     private RecyclerView recentScoresRecyclerView;
     private HistoryAdapter historyAdapter;
-    private List<History> histories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +32,29 @@ public class BestscoreActivity extends AppCompatActivity {
         back = findViewById(R.id.back);
         highestScoreText = findViewById(R.id.highestScoreText);
         correctAnswersText = findViewById(R.id.correctAnswersText);
+        recentScoresRecyclerView = findViewById(R.id.recentScoresRecyclerView);
+
+        back.setOnClickListener(v -> finish());
+        recentScoresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         AnswerManager answerManager = new AnswerManager(this);
-        List<Integer> topScore = answerManager.getTopScores();
+        List<History> historyList = answerManager.getHistoryAnswer();
 
-        if (topScore == null || topScore.isEmpty()){
-            highestScoreText.setText("100");
+        if (historyList == null || historyList.isEmpty()) {
+            correctAnswersText.setText("0");
+            highestScoreText.setText("Chưa có điểm");
             return;
         }
 
-        highestScoreText.setText(""+ topScore.get(0));
+        Collections.sort(historyList, (h1, h2) -> Integer.compare(h2.getScore(), h1.getScore()));
 
-        List<Integer> otherScoer = topScore.subList(1, topScore.size());
+        History bestScore = historyList.get(0);
+        highestScoreText.setText(String.valueOf(bestScore.getCorrectAnswers()));
+        correctAnswersText.setText("Correct: " + bestScore.getScore() + "/" + bestScore.getTotalQuestion());
 
-        recentScoresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        historyAdapter = new HistoryAdapter(otherScoer);
+        List<History> otherScores = new ArrayList<>(historyList.subList(1, historyList.size()));
+
+        historyAdapter = new HistoryAdapter(otherScores);
         recentScoresRecyclerView.setAdapter(historyAdapter);
     }
 }

@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mathgrade1.adappter.AnswerAdapter;
-import com.example.mathgrade1.model.Answer;
+import com.example.mathgrade1.adapter.AnswerAdapter;
+import com.example.mathgrade1.module.Answer;
 import com.example.mathgrade1.shareUtil.AnswerManager;
 import com.example.mathgrade1.shareUtil.MyApplication;
 

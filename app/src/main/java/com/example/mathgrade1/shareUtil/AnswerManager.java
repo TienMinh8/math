@@ -3,8 +3,8 @@ package com.example.mathgrade1.shareUtil;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mathgrade1.model.Answer;
-import com.example.mathgrade1.model.History;
+import com.example.mathgrade1.module.Answer;
+import com.example.mathgrade1.module.History;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -99,12 +99,18 @@ public class AnswerManager {
         List<Integer> topscore = new ArrayList<>();
 
         for (History result : histories){
+            topscore.add(result.getCorrectAnswers());
             topscore.add(result.getScore());
         }
 
+
         Collections.sort(topscore, Collections.reverseOrder());
 
-        return topscore;
+        if (!topscore.isEmpty()){
+            return Collections.singletonList(topscore.get(0));
+        }else {
+            return new ArrayList<>();
+        }
     }
 
     // Xóa tất cả dữ liệu

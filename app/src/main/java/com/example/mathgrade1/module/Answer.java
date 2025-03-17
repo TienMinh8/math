@@ -1,4 +1,4 @@
-package com.example.mathgrade1.model;
+package com.example.mathgrade1.module;
 
 public class Answer {
     private int questionNumber;

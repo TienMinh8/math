@@ -13,8 +13,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mathgrade1.model.Answer;
-import com.example.mathgrade1.model.History;
+import com.example.mathgrade1.module.Answer;
+import com.example.mathgrade1.module.History;
 import com.example.mathgrade1.shareUtil.AnswerManager;
 import com.example.mathgrade1.shareUtil.MyApplication;
 import com.google.gson.Gson;

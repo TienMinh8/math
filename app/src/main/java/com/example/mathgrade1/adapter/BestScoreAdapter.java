@@ -1,4 +1,4 @@
-package com.example.mathgrade1.adappter;
+package com.example.mathgrade1.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
