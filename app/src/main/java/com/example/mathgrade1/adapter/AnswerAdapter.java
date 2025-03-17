@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mathgrade1.R;
-import com.example.mathgrade1.model.Answer;
+import com.example.mathgrade1.module.Answer;
 
 import java.util.List;
 

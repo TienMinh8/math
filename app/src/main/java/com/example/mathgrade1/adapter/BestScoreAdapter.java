@@ -12,8 +12,12 @@ import com.example.mathgrade1.R;
 
 import java.util.List;
 
-public class TopScoreAdapter extends RecyclerView.Adapter<TopScoreAdapter.TopScoreViwHolder> {
+public class BestScoreAdapter extends RecyclerView.Adapter<BestScoreAdapter.TopScoreViwHolder> {
     private List<Integer> topscoer;
+
+    public BestScoreAdapter(List<Integer> topcore) {
+        this.topscoer = topcore;
+    }
 
     @NonNull
     @Override
